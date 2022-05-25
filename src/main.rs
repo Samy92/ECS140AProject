@@ -40,6 +40,9 @@ fn main() {
     stdin().read_line(&mut fname)
         .ok()
         .expect("Failed to read line");
+    let len = fname.trim_end_matches(&['\r', '\n'][..]).len();
+    fname.truncate(len);
+    println!("{}", fname);
     let mut ex = CStream::new(fname);
     ex.set_content().unwrap();
 	println!("{}", ex.content);
