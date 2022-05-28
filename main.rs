@@ -46,6 +46,7 @@ struct Token {
     token_type: TokenType,
     line_num: i32,
     char_pos: i32,
+    total_pos: i32,
 }
 
 impl Token {
@@ -55,44 +56,55 @@ impl Token {
             token_type: tt,
             line_num: -1,
             char_pos: -1,
+            total_pos: -1,
         }
-    }
-
-    fn get_next_token(&mut self) -> Token {
-        let file = File::open(self.filename.as_str())?;
-        let mut buf_reader = io::BufReader::new(file);
-        buf_reader.read_to_string(&mut self.content).unwrap();
-        Ok(())
-        
     }
 
     // get the next character
     fn getNextChar(&mut self)->char{ 
-        self.char_pos = self.char_pos + 1;
-        if (self.text.chars().nth(self.char_pos-1) == Some('\0')) {return '\0';}
-        return self.text.chars().nth(self.char_pos-1).unwrap();
+        cur_pos = self.text.chars().nth(self.total_pos).unwrap();
+        if cur_pos == '\n'{
+            self.char_pos =  0;
+            self.line_num =  self.line_num + 1;
+        }
+        else{
+            self.char_pos =  self.char_pos + 1;
+        }
+        self.total_pos = self.total_pos + 1
+        return self.text.chars().nth(self.total_pos).unwrap();
     }
 
     fn get_TokenType(mut self, text) -> TokenType {
 
-        // Check if text is IntConstant TokenType:
-        
-        // Check if text is FloatConstant TokenType:
+        let keyword = vec!["unsigned", "char", "short", "int", "long", "float", "double", "while", "if", "return", "void", "main"]
+        let operator = vec!["(",",",")","{","}","=","==","<",">","<=",">=","!=","+","-","*","/",";"]
+        let float = vec!['.']
 
+        // Check if text is IntConstant or FloatConstant TokenType:
+        if isnumeric(text.chars().nth(0).unwrap()) || text.chars().nth(0).unwrap() == '-'  {
+            if float.contains('.'){
+                return TokenType::FloatConstant;
+            }
+            else{
+                return TokenType::IntConstant;
+            }
+        }
+        
         // Check if text is Keyword TokenType:
-        let keyword: vec!["unsigned", "char", "short", "int", "long", "float", "double", "while", "if", "return", "void", "main"]
-        if keyword.contains(text){ return TokenType:Keyword;}
+        else if keyword.contains(text){ return TokenType:Keyword;}
 
         // Check if text is Operator TokenType:
-        let operator: vec!["(",",",")","{","}","=","==","<",">","<=",">=","!=","+","-","*","/",";"]
-        if operator.contains(text){ return TokenType:Operator;}
+        else if operator.contains(text){ return TokenType:Operator;}
         
         // Check if text is Identifier TokenType:
-        if(text.chars().nth(0).unwrap()=='_' || isalphabetic(text.chars().nth(0).unwrap())){
+        else if(text.chars().nth(0).unwrap()=='_' || isalphabetic(text.chars().nth(0).unwrap())){
             return TokenType:Identifier;
         }
 
         // Check if text is Invalid TokenType:
+        else{
+            return TokenType:Invalid;
+        }
     }
 
 }
