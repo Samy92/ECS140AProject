@@ -70,7 +70,7 @@ impl Token {
     fn get_next_token(f: String) -> Vec<String>{
         let mut vec = Vec::new();
         let mut st = String::new();
-        let mut char_pos = -1;
+        let mut char_pos: i32 = -1;
         let mut line_num = -1;
         for c in f.chars(){
             char_pos = char_pos + 1;
@@ -85,7 +85,9 @@ impl Token {
                 let copy = st.clone();
                 let ch = c.to_string();
                 if st != ""{
-                    println!("Token {} Char Position {} Line Position {}", copy, char_pos, line_num);
+                    let x: usize = char_pos as usize;
+                    let mut y = copy.len();
+                    println!("Token {} Char Position {} Line Position {}", copy, x - y, line_num);
                     vec.push(copy);
                     st.clear();
                 }
