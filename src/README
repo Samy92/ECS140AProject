@@ -1,0 +1,6 @@
+Student 1: Sammy Fadili; email: ofadili@ucdavis.edu; ID:918393168
+Student 2: Zunaira Ahmad; email: zuahmad@ucdavis.edu; ID: 918078056
+
+We were able to finish stages 1 and 2. We completed the code for stages 3 and 4 but unfortunately it had some bugs.
+
+To run the code enter: cargo build, then cargo run, and then enter the name of the .x file
