@@ -52,26 +52,16 @@ impl fmt::Display for TokenType {
        write!(f, "{:?}", self)
     }
 }
-
-struct Token {
-    text: String,
-    token_type: TokenType,
-
+struct Scanner {
 }
 
-impl Token {
-    fn new(f: String, tt: TokenType) -> Token {
-        Token {
-            text: f.to_string(),
-            token_type: tt,
-        }
-    }
-    
+impl Scanner {
+
     fn get_next_token(f: String) -> Vec<String>{
-        let mut vec = Vec::new();
-        let mut st = String::new();
         let mut char_pos: i32 = -1;
         let mut line_num = -1;
+        let mut vec = Vec::new();
+        let mut st = String::new();
         for c in f.chars(){
             char_pos = char_pos + 1;
             if c != ' ' && c != '(' && c != ')' && c != ':' && c != '\n'  && c != ';'&& c != '{' && c != '}'{
@@ -99,6 +89,22 @@ impl Token {
             }
         }
         return vec;
+    }
+
+}
+
+struct Token {
+    text: String,
+    token_type: TokenType,
+
+}
+
+impl Token {
+    fn new(f: String, tt: TokenType) -> Token {
+        Token {
+            text: f.to_string(),
+            token_type: tt,
+        }
     }
 
     fn get_TokenType(tok: String) -> TokenType{
@@ -135,6 +141,211 @@ impl Token {
 
 }
 
+/*struct parser{
+    // struct elements
+}
+
+impl parser{
+
+    // EBNF Rules
+
+    fn Program(&mut self)->bool{
+        let mut temp = 0;
+        while self.Declaration()==true{
+            temp = 1;
+        }
+        if temp==1{
+            if self.MainDeclaration()==true{
+                while self.FunctionDefinition()==true{
+                    self.FunctionDefinition();
+                }
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Declaration(&mut self)->bool{
+        if self.DeclarationType()==true{
+            if VariableDeclaration()==true || FunctionDeclaration()==true{
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn MainDeclaration(&mut self)->bool{
+        // TODO
+    }
+
+    fn FunctionDefinition(&mut self)->bool{
+        if self.DeclarationType()==true{
+            if self.ParameterBlock()==true{
+                if self.Block()==true{
+                    return true;
+                }
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn DeclarationType(&mut self)->bool{
+        if self.DataType()==true{
+            if self.Identifier()==true{
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn VariableDeclaration(&mut self)->bool{
+        // TODO
+    }
+
+    fn FunctionDeclaration(&mut self)->bool{
+        if self.ParameterBlock()==true{
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Block(&mut self)->bool{
+        // TODO
+    }
+
+    fn ParameterBlock(&mut self)->bool{
+        // TODO
+    }
+
+    fn DataType(&mut self)->bool{
+        if self.IntegerType()==true || self.FloatType()==true{
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Constant(&mut self)->bool{
+        if self.IntConstant()==true || self.FloatConstant()==true{
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Statement(&mut self)->bool{
+        if self.Assignment() == true || self.WhileLoop() == true || self.IfStatement() == true || self.ReturnStatement() == true || self.Expression() == true {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Parameter(&mut self)->bool{
+        // TODO
+    }
+
+    fn IntegerType(&mut self)->bool{
+        // TODO
+    }
+    
+    fn FloatType(&mut self)->bool{
+        // TODO
+    }
+
+    fn Assignment(&mut self)->bool{
+        // TODO
+    }
+
+    fn WhileLoop(&mut self)->bool{
+        // TODO
+    }
+
+    fn IfStatement(&mut self)->bool{
+        // TODO
+    }
+
+    fn ReturnStatement(&mut self)->bool{
+        // TODO
+    }
+
+    fn Expression(&mut self)->bool{
+        if self.SimpleExpression()==true{
+            if self.RelationOperator()==true {
+                if self.SimpleExpression()==true{
+                    return true;
+                }
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn SimpleExpression(&mut self)->bool{
+        let mut temp = 0;
+        if self.Term()==true{
+            while self.AddOperator()==true & self.Term()==true{
+                temp = 1
+            }
+            if temp==1{
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Term(&mut self)->bool{
+        let mut temp = 0;
+        if self.Factor()==true{
+            while self.MultOperator()==true & self.Factor()==true{
+                temp = 1
+            }
+            if temp==1{
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    fn Factor(&mut self)->bool{
+        // TODO
+    }
+
+    fn RelationOperator(&mut self)->bool{
+        // TODO
+    }
+
+    fn AddOperator(&mut self)->bool{
+        // TODO
+    }
+
+    fn MultOperator(&mut self)->bool{
+        // TODO
+    }
+}*/
+
 fn main() {
     let mut fname = String::new();
     println!("Enter the file name:");
@@ -147,7 +358,7 @@ fn main() {
     let mut ex = CStream::new(fname);
     ex.set_content().unwrap();
     println!("{}", ex.content);
-    let all_tokens = Vec::from(Token::get_next_token(ex.content));
+    let all_tokens = Vec::from(Scanner::get_next_token(ex.content));
     println!("{:?}", all_tokens);
     for n in all_tokens{
         let x = n.clone();
