@@ -56,11 +56,12 @@ struct Scanner {
 }
 
 impl Scanner {
-
-    fn get_next_token(f: String) -> Vec<String>{
+    fn get_next_token(f: String) -> (Vec<String> , Vec<i32> ,Vec<i32>){
         let mut char_pos: i32 = -1;
         let mut line_num = -1;
         let mut vec = Vec::new();
+        let mut char_vec = Vec::new();
+        let mut line_vec = Vec::new();
         let mut st = String::new();
         for c in f.chars(){
             char_pos = char_pos + 1;
@@ -87,8 +88,10 @@ impl Scanner {
 
                 }
             }
+            char_vec.push(char_pos);
+            line_vec.push(line_num);
         }
-        return vec;
+        return (vec, char_vec, line_vec);
     }
 
 }
@@ -141,13 +144,17 @@ impl Token {
 
 }
 
-/*struct parser{
+struct parser{
     // struct elements
 }
 
 impl parser{
 
     // EBNF Rules
+
+    fn tokenCheker(t1: String, t2: String) -> String{
+        if t1 == 
+    }
 
     fn Program(&mut self)->bool{
         let mut temp = 0;
@@ -181,8 +188,8 @@ impl parser{
         }
     }
 
-    fn MainDeclaration(&mut self)->bool{
-        // TODO
+    fn MainDeclaration(&mut self, s: string)->bool{
+        if 
     }
 
     fn FunctionDefinition(&mut self)->bool{
@@ -344,7 +351,7 @@ impl parser{
     fn MultOperator(&mut self)->bool{
         // TODO
     }
-}*/
+}
 
 fn main() {
     let mut fname = String::new();
@@ -358,12 +365,19 @@ fn main() {
     let mut ex = CStream::new(fname);
     ex.set_content().unwrap();
     println!("{}", ex.content);
-    let all_tokens = Vec::from(Scanner::get_next_token(ex.content));
-    println!("{:?}", all_tokens);
-    for n in all_tokens{
-        let x = n.clone();
-        let tokentype = Token::get_TokenType(n);
-        println!("Token {} - Token Type: {}", x, tokentype);
+    let mut all_tokens = Vec::new();
+    let mut all_char = Vec::new();
+    let mut all_lines = Vec::new();
+    (all_tokens, all_char, all_lines) = Scanner::get_next_token(ex.content);
+
+    /*println!("Tokens {:?}", all_tokens);
+    println!("Char pos {:?}", all_char);
+    println!("Line Num {:?}", all_lines);*/
+    let mut y =  all_tokens.len() - 1;
+    for i in 0..y{
+        let mut res = String::from(Parser::tokenCheker( all_tokens[i],  all_tokens[i+1]));
+
+        
     }
 
 } 
